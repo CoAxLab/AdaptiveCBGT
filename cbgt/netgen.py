@@ -847,14 +847,9 @@ def mcInfo(**kwargs):
               'RightStim': 2.50,
               'Start': 500,
               'Choices': 2,
-              'Dynamic': 30,
-              't1_epochs':[1,0],
-              't2_epochs':[0,1]}
+              'Dynamic': 30}
 
     config.update(kwargs)
-
-    t1_epochs = config['t1_epochs']['r']
-    t2_epochs = config['t2_epochs']['r']
 
     dims = {'brain': 1, 'choices': config['Choices']}
 
@@ -869,7 +864,7 @@ def mcInfo(**kwargs):
 
     hes = []
     houts = []
-    for i in range(0,len(t1_epochs)):
+    for i in range(0,50):
         hes.append(makeHandleEvent('reset', 0, 'sensory', [], config['BaseStim']))
         hes.append(makeHandleEvent('wrong stimulus', config['Start'], 'sensory', [], config['WrongStim']))
         hes.append(makeHandleEvent('right stimulus', config['Start'], 'sensory', [0], config['RightStim']))
@@ -877,25 +872,25 @@ def mcInfo(**kwargs):
         #hes.append(makeHandleEvent('hyperdirect', config['Start'], 'threshold', [0], config['STNExtFreq']+.75))
         #hes.append(makeHandleEvent('dynamic cutoff', config['Start'], 'out', [1], config['Dynamic'], 'EndTrial', 2, 0.1)) #Right reward 0.1
         #if random.uniform(0, 1) < config['rewardprob']:
-        if t1_epochs[i] > 0:
+        if i < 20:
             if random.uniform(0, 1) < 0.5:
-                hes.append(makeHandleEvent('dynamic cutoff', config['Start'], 'out', [0], config['Dynamic'], 'EndTrial', 1, t1_epochs[i])) #Left reward 1.0
+                hes.append(makeHandleEvent('dynamic cutoff', config['Start'], 'out', [0], config['Dynamic'], 'EndTrial', 1, 1.0)) #Left reward 1.0
                 hes.append(makeHandleEvent('dynamic cutoff', config['Start'], 'out', [1], config['Dynamic'], 'EndTrial', 2, 0.0)) #Right reward 0.0
                 houts.append(makeHandleEvent('decision made', config['Start'], 'out', [0], config['Dynamic'], 'EndTrial'))
                 houts.append(makeHandleEvent('decision made', config['Start'], 'out', [1], config['Dynamic'], 'EndTrial'))
             else:
                 hes.append(makeHandleEvent('dynamic cutoff', config['Start'], 'out', [1], config['Dynamic'], 'EndTrial', 2, 0.0)) #Right reward 0.0
-                hes.append(makeHandleEvent('dynamic cutoff', config['Start'], 'out', [0], config['Dynamic'], 'EndTrial', 1, t1_epochs[i])) #Left reward 1.0
+                hes.append(makeHandleEvent('dynamic cutoff', config['Start'], 'out', [0], config['Dynamic'], 'EndTrial', 1, 1.0)) #Left reward 1.0
                 houts.append(makeHandleEvent('decision made', config['Start'], 'out', [1], config['Dynamic'], 'EndTrial'))
                 houts.append(makeHandleEvent('decision made', config['Start'], 'out', [0], config['Dynamic'], 'EndTrial'))
         else:
             if random.uniform(0, 1) < 0.5:
                 hes.append(makeHandleEvent('dynamic cutoff', config['Start'], 'out', [0], config['Dynamic'], 'EndTrial', 1, 0.0)) #Left reward 0.0
-                hes.append(makeHandleEvent('dynamic cutoff', config['Start'], 'out', [1], config['Dynamic'], 'EndTrial', 2, t2_epochs[i])) #Right reward 1.0
+                hes.append(makeHandleEvent('dynamic cutoff', config['Start'], 'out', [1], config['Dynamic'], 'EndTrial', 2, 1.0)) #Right reward 1.0
                 houts.append(makeHandleEvent('decision made', config['Start'], 'out', [0], config['Dynamic'], 'EndTrial'))
                 houts.append(makeHandleEvent('decision made', config['Start'], 'out', [1], config['Dynamic'], 'EndTrial'))
             else:
-                hes.append(makeHandleEvent('dynamic cutoff', config['Start'], 'out', [1], config['Dynamic'], 'EndTrial', 2, t2_epochs[i])) #Right reward 1.0
+                hes.append(makeHandleEvent('dynamic cutoff', config['Start'], 'out', [1], config['Dynamic'], 'EndTrial', 2, 1.0)) #Right reward 1.0
                 hes.append(makeHandleEvent('dynamic cutoff', config['Start'], 'out', [0], config['Dynamic'], 'EndTrial', 1, 0.0)) #Left reward 0.0
                 houts.append(makeHandleEvent('decision made', config['Start'], 'out', [1], config['Dynamic'], 'EndTrial'))
                 houts.append(makeHandleEvent('decision made', config['Start'], 'out', [0], config['Dynamic'], 'EndTrial'))
